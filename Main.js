@@ -5,6 +5,7 @@ import {DataStore} from "./js/base/DataStore.js";
 import {Director} from "./js/Director.js";
 import {Land} from "./js/runtime/Land.js";
 import {Birds} from "./js/player/Birds.js";
+import {StartButton} from "./js/player/StartButton";
 
 export class Main {
 
@@ -32,9 +33,23 @@ export class Main {
             .put('pencils', [])
             .put('background', BackGround)
             .put('land', Land)
-            .put('birds', Birds);
+            .put('birds', Birds)
+            .put('startButton', StartButton);
+        this.registerEvent();
         // 创建铅笔要在游戏逻辑运行之前
         this.director.createPencil();
         this.director.run();
+    }
+
+    registerEvent() {
+        this.canvas.addEventListener('touchstart', e => {
+            // 屏蔽事件冒泡
+            e.preventDefault();
+            if (this.director.isGameOver) {
+                this.init();
+            } else {
+                this.director.birdsEvent();
+            }
+        });
     }
 }
